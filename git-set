@@ -1,0 +1,12 @@
+#!/bin/bash
+set -eu
+
+#
+# git set
+#
+# Sets the tracking information for the current branch to use
+# the same branch name on remote "origin".
+#
+
+current_branch_name=$(git rev-parse --abbrev-ref HEAD)
+git branch --set-upstream-to="origin/$current_branch_name" "$current_branch_name"

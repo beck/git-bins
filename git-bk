@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eu
+
+#
+# git bk - create doug/bk configured to current branch
+#
+
+git branch -D doug/bk
+git branch doug/bk
+git log --oneline master..doug/bk

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+#
+# git poheaders
+#
+# replace all po headers with what is in master
+#
+
+version=${1:-master}
+headerpo=$(mktemp -t header.XXXXXX.po)
+echo 'msgid ""' >> "$headerpo"
+echo 'msgstr ""' >> "$headerpo"
+echo '"Content-Type: text/plain; charset=UTF-8\n"' >> "$headerpo"
+
+echo -n "Resetting po headers to $version.."
+for f in $(git ls-files)
+do
+    if [[ ! $f =~ \.po$ ]]; then
+        continue;
+    fi
+    echo -n '.'
+
+    # pull the po's header from older version
+    cp "$f" "$f.local"
+    git checkout "$version" "$f"
+    msgcat "$f" "$headerpo" --more-than 1 --force-po --use-first > "$f.header"
+
+    # knockout header changes
+    msgcat "$f.header" "$f.local" --use-first > "$f"
+
+    rm "$f.local" "$f.header"
+done
+
+rm "$headerpo";
+echo

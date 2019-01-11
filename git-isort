@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#
+# git isort - isort 'any files with a diff
+#
+# to use:
+# * install isort (this code uses pyenv and has isort installed in 2.7.5)
+# * place file anywhere on PATH, called with `git isort`
+#
+
+isort_cmd=$(pyenv root)/versions/2.7.5/bin/isort
+$isort_cmd --version >/dev/null 2>&1
+
+if [ $? != 0 ]
+then
+  echo "isort is broken"
+  exit
+fi
+
+for f in $(git diff head --name-only)
+do
+    echo "isort $f"
+    $isort_cmd "$f"
+done

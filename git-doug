@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eu
+
+#
+# git doug - cleanup the doug/branches
+#
+
+git checkout master
+git pull
+echo "Prune origin..."
+git remote prune origin
+echo "Deleting local merged branches ..."
+git branch -a --merged | egrep "^\s*doug" | xargs -n1 git branch -d
+echo "Deleting merged branches on origin ..."
+git branch -a --merged | grep "remotes/origin/doug" |
+    cut -d"/" -f4 | xargs -I BRANCH git push origin ":doug/BRANCH"

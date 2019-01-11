@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#
+# git fixup - squash current changes into the last commit
+#
+# Stores the current the current head in 'doug/fixup'.
+#
+
+git branch -f doug/backup
+git add -A
+GIT_EDITOR=: git commit --amend
+
+# old way of doing it
+#git commit --fixup head
+#GIT_EDITOR=: git rebase -i --autosquash head~~
+
+echo
+git diff doug/backup
+echo

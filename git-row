@@ -1,0 +1,11 @@
+#!/bin/bash
+set -eu
+
+#
+# git row
+#
+# To be used during a rebase, git show the current commit being applied.
+#
+
+
+git show --stat $(cat .git/ORIG_HEAD)

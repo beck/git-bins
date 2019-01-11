@@ -1,0 +1,80 @@
+#!/bin/bash
+set -eu
+
+#
+# git purge <branch-name>
+#
+# Delete a branch (irrespective of its merged status) and
+# remove from origin.
+#
+# See ".bin/profile-additions.sh" for adding autocompletion
+#
+
+green='\033[0;32m'
+yellow='\033[0;33m'
+red='\033[0;31m'
+blue='\033[0;34m'
+color_off='\033[0m'
+
+
+function check_set_branch_name {
+  local current_branch_name
+  local answer
+
+  if [ -z $branch_name ]
+  then
+
+    # no branch name given, delete the current branch
+    current_branch_name=$(git rev-parse --abbrev-ref HEAD)
+    echo -e "${blue}Delete ${yellow}${current_branch_name} ${blue}?${color_off}"
+    echo -ne "${blue}Type 'yes' to continue: ${color_off}"
+    read answer
+    if [ "$answer" != "yes" ]
+    then
+      exit 1
+    fi
+    branch_name="$current_branch_name"
+    git checkout master
+  fi
+
+  # never delete master or release
+  if [ "$branch_name" = "master" ] || [ "$branch_name" = "release" ]
+  then
+    echo -e "${red}WTF dude, you're deleting $branch_name.${color_off}"
+    exit 1
+  fi
+
+}
+
+
+function purge {
+  echo -e "${blue}Purging $branch_name ...${color_off}${color_off}"
+
+  # delete the local branch
+  if git show-branch "$branch_name" > /dev/null 2>&1
+  then
+    git branch -D "$branch_name"
+  else
+    echo -e "${blue}No local branch to delete${color_off}"
+  fi
+
+  # delete the remote branch
+  git remote prune origin
+  if git show-branch "origin/$branch_name" > /dev/null 2>&1
+  then
+    echo -e "${blue}Deleting remote $branch_name ...${color_off}"
+    git push origin ":$branch_name"
+  else
+    echo "No remote branch to delete"
+  fi
+}
+
+
+function fin {
+  echo -e "${blue}Happy Days!${color_off}"
+}
+
+branch_name=${1:-}
+check_set_branch_name
+purge
+fin
