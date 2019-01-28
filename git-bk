@@ -1,10 +1,13 @@
 #!/bin/bash
-set -eu
+set -ux
 
 #
 # git bk - create doug/bk configured to current branch
 #
 
-git branch -D doug/bk
+echo "Backing up..."
+git branch --delete doug/bk
+git push origin --delete :doug/bk
 git branch doug/bk
-git log --oneline master..doug/bk
+git push -u origin doug/bk
+git log --oneline -3 master..doug/bk
