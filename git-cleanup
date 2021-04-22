@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eu
+
+#
+# git cleanup - delete patch checkouts
+#
+
+color_reset='\033[0m'
+green='\033[0;32m'
+
+git checkout develop
+git pull
+
+echo -e "Deleting patch checkouts ...${green}"
+git branch | grep "change-" | xargs -n1 git branch -D
+echo -en "${color_reset}"
