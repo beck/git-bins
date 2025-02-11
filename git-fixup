@@ -6,7 +6,7 @@
 # Stores the current the current head in 'doug/fixup'.
 #
 
-git branch -f doug/backup
+git branch -f doug/fixup
 git add -A
 GIT_EDITOR=: git commit --amend
 
@@ -15,5 +15,5 @@ GIT_EDITOR=: git commit --amend
 #GIT_EDITOR=: git rebase -i --autosquash head~~
 
 echo
-git diff doug/backup
+git diff doug/fixup
 echo

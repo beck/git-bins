@@ -7,7 +7,7 @@ set -ux
 
 echo "Backing up..."
 git branch --delete --force doug/bk
-git push origin --delete feature/doug/bk
+git push origin --delete doug/bk
 git branch doug/bk
-git push -u origin feature/doug/bk
-git log --oneline -3 develop..doug/bk
+git push -u origin doug/bk
+git log --oneline -3 main..doug/bk
