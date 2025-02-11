@@ -1,10 +1,15 @@
 # git-bins
 
-Hodgepodge of helpers
+Hodgepodge of helpers.
 
-Don't forget to add to path:
+For these to work, they need to be on your path.
+
+So there should be a line like so in your `.bash_profile`:
 
 ```sh
-echo '' >> ~/.bash_profile
-echo 'export PATH="$PATH:'$(pwd)'"' >> ~/.bash_profile
+export PATH="$PATH:$HOME/src/git-bins"
 ```
+
+FYI, can also ignore custom git commands:
+
+https://git-scm.com/docs/git-help#Documentation/git-help.txt---no-external-commands

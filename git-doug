@@ -8,21 +8,45 @@ set -eu
 color_reset='\033[0m'
 green='\033[0;32m'
 
-git checkout develop
-git pull
+git checkout main
 
-echo -e "Prune origin...${green}"
-git remote prune origin
-echo -en "${color_reset}"
+echo
 
-echo -e "Deleting local merged branches ...${green}"
-git branch -a --merged | grep -E "^\s*doug" | xargs -n1 git branch -d
-echo -en "${color_reset}"
+# TOO SLOW
+# git pull
 
-echo -e "Deleting patch checkouts ...${green}"
-git branch | grep "change-" | xargs -n1 git branch -D
-echo -en "${color_reset}"
+# TOO SLOW
+# echo -e "Prune origin...${green}"
+# git remote prune origin
+# echo -en "${color_reset}"
+
+
+# NOW BROKEN - doesn't work when using squash merge
+# echo -e "Deleting local merged branches ...${green}"
+# git branch -a --merged | grep -E "^\s*doug" | xargs -n1 git branch -d
+# echo -en "${color_reset}"
+
+
+echo "Delete squashed merged branches ..."
+git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch
+do
+    # Code from: https://github.com/not-an-aardvark/git-delete-squashed
+    TARGET_BRANCH=main
+    mergeBase=$(git merge-base $TARGET_BRANCH $branch)
+    commitTree=$(git commit-tree $(git rev-parse $branch\^{tree}) -p $mergeBase -m 'created by git-delete-squashed')
+    cherryHash=$(git cherry $TARGET_BRANCH $commitTree)
+    if [[ $cherryHash == "-"* ]]
+    then
+        echo -en "${green}  "
+        git branch -D $branch
+        echo -en "${color_reset}"
+    else
+        echo "  SKIP" $branch
+    fi
+done
 
 # echo "Deleting merged branches on origin ..."
 # git branch -a --merged | grep "remotes/origin/doug" |
 #     cut -d"/" -f4 | xargs -I BRANCH git push origin ":doug/BRANCH"
+
+echo
