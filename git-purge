@@ -34,11 +34,11 @@ function check_set_branch_name {
       exit 1
     fi
     branch_name="$current_branch_name"
-    git checkout master
+    git checkout main
   fi
 
-  # never delete master or release
-  if [ "$branch_name" = "master" ] || [ "$branch_name" = "release" ]
+  # never delete important branches
+  if [ "$branch_name" = "main" ] || [ "$branch_name" = "master" ] || [ "$branch_name" = "release" ]
   then
     echo -e "${red}WTF dude, you're deleting $branch_name.${color_off}"
     exit 1
