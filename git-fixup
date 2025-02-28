@@ -8,7 +8,7 @@
 
 git branch -f doug/fixup
 git add -A
-GIT_EDITOR=: git commit --amend
+GIT_EDITOR=: git commit -n --amend
 
 # old way of doing it
 #git commit --fixup head
