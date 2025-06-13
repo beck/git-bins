@@ -9,7 +9,9 @@ color_reset='\033[0m'
 green='\033[0;32m'
 
 git checkout main
+# git fetch --tags --force # resolves "would clobber existing tag" errors
 git pull
+git remote prune origin
 
 # TOO SLOW
 # echo -e "Prune origin...${green}"
